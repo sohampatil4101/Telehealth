@@ -17,7 +17,12 @@ app.get('/', (req, res) => {
 })
  
 // // Available routes
-// app.use('/api/user', require('./routes/user'))
+
+// 1.for user
+app.use('/api/user', require('./routes/user'))
+
+// 2.for doctor
+app.use('/api/doctor', require('./routes/doctor'))
 
 
 

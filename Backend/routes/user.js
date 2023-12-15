@@ -31,9 +31,6 @@ router.post('/createuser', validate, async (req, res) =>{
             if(useremail){
         return res.status(400).json({error: "sorry user with these email exist"})
             }
-            if(username){
-        return res.status(400).json({error: "sorry user with these username exist"})
-            }
     else{
         const salt = await bcrypt.genSalt(10);
         let hashpassword = await bcrypt.hash(req.body.password, salt)
@@ -64,44 +61,44 @@ router.post('/createuser', validate, async (req, res) =>{
 
 
 // // Route 2 to authenticate user
-// router.post('/login', [
-//     body('email', 'Enter a valid Email').isEmail(),
-//     body('password', 'password cannot be blank').exists()], 
-//     async (req, res) =>{
-//         let success = false
-//         const errors = validationResult(req);
-//         if(!errors.isEmpty()){
-//             return res.status(404).json({success, errors: errors.array()})
-//         }
+router.post('/login', [
+    body('email', 'Enter a valid Email').isEmail(),
+    body('password', 'password cannot be blank').exists()], 
+    async (req, res) =>{
+        let success = false
+        const errors = validationResult(req);
+        if(!errors.isEmpty()){
+            return res.status(404).json({success, errors: errors.array()})
+        }
 
-//         const{email, password} = req.body;
-//         try {
-//             const user = await User.findOne({email});
-//             if(!user){
-//                 return res.status(400).json({success, error: "Please try to login with correct cridentials"})
-//             }
-//             const passwordcompare = await bcrypt.compare(password, user.password);
-//             if(!passwordcompare){
-//                 return res.status(400).json({success, error: "Please try to login with correct cridentials"})
-//             }
+        const{email, password} = req.body;
+        try {
+            const user = await User.findOne({email});
+            if(!user){
+                return res.status(400).json({success, error: "Please try to login with correct cridentials"})
+            }
+            const passwordcompare = await bcrypt.compare(password, user.password);
+            if(!passwordcompare){
+                return res.status(400).json({success, error: "Please try to login with correct cridentials"})
+            }
             
-//         const data = {
-//             user:{
-//                 id: user.id
-//             }
-//         }
-//         const jwtdata = jwt.sign(data, JWT_SECRET);
-//         success = true
-//         res.json({success, jwtdata})
-//         } 
+        const data = {
+            user:{
+                id: user.id
+            }
+        }
+        const jwtdata = jwt.sign(data, JWT_SECRET);
+        success = true
+        res.json({success, jwtdata})
+        } 
         
            
-//         catch (error) {
-//         console.log(error.message)
-//         res.status(500).send("Internal server error occured")
-//     }
-//     }
-//     )
+        catch (error) {
+        console.log(error.message)
+        res.status(500).send("Internal server error occured")
+    }
+    }
+    )
 
 // // Route 3 to get logged in user details
 //     router.get('/fetchuserdetails', fetchuser, async(req, res) =>{
